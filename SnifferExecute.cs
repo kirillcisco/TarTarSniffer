@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,13 +13,10 @@ namespace TarTarSniffer
         [STAThread]
         static void Main()
         {
-            //Get USER ID;
-            System.Security.Principal.WindowsPrincipal _userGroups = new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent());
-            
             //admin or not
-            if (_userGroups.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator))
+            if (isAdmin())
             {
-                //if this were run by administrators, run it directly
+                //if admin, run it directly
                 Application.EnableVisualStyles();
                 Application.Run(new MainWindow());
             }
@@ -41,6 +39,13 @@ namespace TarTarSniffer
                 }
                 Application.Exit();
             }
+        }
+
+        private static bool isAdmin()
+        {
+            WindowsIdentity used_identity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(used_identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }

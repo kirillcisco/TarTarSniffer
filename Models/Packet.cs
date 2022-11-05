@@ -51,6 +51,7 @@ namespace TarTarSniffer.Models
 
         public Packet(byte[] raw)
         {
+            Console.WriteLine("packet catched");
             // all the following exceptions should be caught when invoking this constructor;
             if (raw == null)
                 throw new ArgumentNullException();
@@ -74,7 +75,7 @@ namespace TarTarSniffer.Models
             if (Enum.IsDefined(typeof(Packet_Protocol), (int)packet_Raw[9]))
                 packet_Protocol = (Packet_Protocol)packet_Raw[9];
             else
-                packet_Protocol = Packet_Protocol.UNCPEIFIED;
+                packet_Protocol = Packet_Protocol.UNKNOWN;
 
             packet_SRC_IP = new IPAddress(BitConverter.ToUInt32(packet_Raw, 12));
             packet_DEST_IP = new IPAddress(BitConverter.ToUInt32(packet_Raw, 16));
@@ -97,10 +98,81 @@ namespace TarTarSniffer.Models
             }
             else
             {
-                packet_SRC_PORT = -404;
-                packet_DEST_PORT = -404;
+                packet_SRC_PORT = -1;
+                packet_DEST_PORT = -1;
             }
+        }
 
+        public string SRC_IP
+        { 
+            get 
+            { 
+                return packet_SRC_IP.ToString(); 
+            } 
+        }
+
+        public string SRC_PORT
+        { 
+            get 
+            { 
+                if (packet_SRC_PORT != -1)
+                {
+                    return packet_SRC_PORT.ToString();
+                }
+                else
+                {
+                    return "Unknown src port";
+                }
+                
+            } 
+        }
+
+        public string DEST_IP
+        {
+            get
+            {
+                return packet_DEST_IP.ToString();
+            }
+        }
+
+        public string DEST_PORT
+        {
+            get
+            {
+                if (packet_DEST_PORT != -1)
+                {
+                    return packet_DEST_PORT.ToString();
+                }
+                else
+                {
+                    return "Unknown dest port";
+                }
+
+            }
+        }
+
+        public string PROTOCOL
+        {
+            get
+            {
+                return packet_Protocol.ToString();
+            }
+        }
+
+        public int LENGHT
+        {
+            get
+            {
+                return packet_totalLength;
+            }
+        }
+
+        public string TIME
+        {
+            get
+            {
+                return sniffedTime.ToLongTimeString();
+            }
         }
     }
 }

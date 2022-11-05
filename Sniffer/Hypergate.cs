@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using TarTarSniffer.Models;
 
 namespace TarTarSniffer.Sniffer
 {
@@ -46,6 +47,7 @@ namespace TarTarSniffer.Sniffer
         
         public void StartMonitor()
         {
+            Console.WriteLine("started:  " + this._ipAddress);
             if(hypergate_Socket == null)
             {
                 try
@@ -96,8 +98,7 @@ namespace TarTarSniffer.Sniffer
                     Array.Copy(hypergate_buffer, 0, receivedBuffer, 0, len);
                     try
                     {
-                        Models.Packet packet = new Models.Packet(receivedBuffer);
-                        OnNewPacket(packet);
+                        Packet packet = new Packet(receivedBuffer);
                     }
                     catch (ArgumentNullException ane)
                     {
@@ -116,17 +117,5 @@ namespace TarTarSniffer.Sniffer
                 StopMonitor();
             }
         }
-
-
-        protected void OnNewPacket(Models.Packet p)
-        {
-            if (newPacketEventHandler != null)
-            {
-                newPacketEventHandler(this, p);
-            }
-        }
-
-        public event NewPacketEventHandler newPacketEventHandler;
-        public delegate void NewPacketEventHandler(Hypergate hypergate, Models.Packet p);
     }
 }

@@ -32,7 +32,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btn_Start = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.listView1 = new System.Windows.Forms.ListView();
@@ -83,15 +83,15 @@
             this.button3.Text = "Stop";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // btn_Start
             // 
-            this.button4.Location = new System.Drawing.Point(641, 12);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(94, 29);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "Start";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.btn_Start.Location = new System.Drawing.Point(641, 12);
+            this.btn_Start.Name = "btn_Start";
+            this.btn_Start.Size = new System.Drawing.Size(94, 29);
+            this.btn_Start.TabIndex = 4;
+            this.btn_Start.Text = "Start";
+            this.btn_Start.UseVisualStyleBackColor = true;
+            this.btn_Start.Click += new System.EventHandler(this.button4_Click);
             // 
             // button5
             // 
@@ -206,7 +206,7 @@
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.btn_Start);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -225,7 +225,7 @@
         private Button button1;
         private Button button2;
         private Button button3;
-        private Button button4;
+        private Button btn_Start;
         private Button button5;
         private ComboBox comboBox1;
         private ListView listView1;
