@@ -87,11 +87,11 @@ namespace TarTarSniffer.Sniffer
             hypergate_Socket = null;
         }
 
-        private void OnReceive(IAsyncResult recieved_raw)
+        private void OnReceive(IAsyncResult ARes)
         {
             try
             {
-                int len = hypergate_Socket.EndReceive(recieved_raw);
+                int len = hypergate_Socket.EndReceive(ARes);
                 if (hypergate_Socket != null)
                 {
                     byte[] receivedBuffer = new byte[len];

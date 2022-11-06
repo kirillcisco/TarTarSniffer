@@ -48,10 +48,11 @@ namespace TarTarSniffer.Models
         private int packet_DEST_PORT;
         private int packet_totalLength;
         private int packet_headLength;
+        private readonly int LineCount = 30;
 
         public Packet(byte[] raw)
         {
-            Console.WriteLine("packet catched");
+            
             // all the following exceptions should be caught when invoking this constructor;
             if (raw == null)
                 throw new ArgumentNullException();
@@ -80,7 +81,7 @@ namespace TarTarSniffer.Models
             packet_SRC_IP = new IPAddress(BitConverter.ToUInt32(packet_Raw, 12));
             packet_DEST_IP = new IPAddress(BitConverter.ToUInt32(packet_Raw, 16));
             packet_totalLength = packet_Raw[2] * 256 + packet_Raw[3];
-
+            
             // handle TCP OR UDP
             if (packet_Protocol == Packet_Protocol.TCP || packet_Protocol == Packet_Protocol.UDP)
             {
@@ -101,6 +102,7 @@ namespace TarTarSniffer.Models
                 packet_SRC_PORT = -1;
                 packet_DEST_PORT = -1;
             }
+            Console.WriteLine("packet catched: ["+sniffedTime+"] | SRC: [" + packet_SRC_IP + "] | DEST: [" + packet_DEST_IP + "] | Protocol: [" + packet_Protocol + "] | Lenght: [" + packet_totalLength + "]");
         }
 
         public string SRC_IP
@@ -173,6 +175,25 @@ namespace TarTarSniffer.Models
             {
                 return sniffedTime.ToLongTimeString();
             }
+        }
+
+        // return character format of packet without header
+        public string getCharString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = this.packet_headLength; i < packet_totalLength; i += LineCount)
+            {
+                for (int j = i; j < packet_totalLength && j < i + LineCount; j++)
+                {
+                    if (packet_Raw[j] > 31 && packet_Raw[j] < 128)
+                        sb.Append((char)packet_Raw[j]);
+                    else
+                        sb.Append(".");
+                }
+                sb.Append("\n");
+            }
+            return sb.ToString();
         }
     }
 }

@@ -11,6 +11,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Threading;
 
 namespace TarTarSniffer
 {
@@ -23,7 +25,7 @@ namespace TarTarSniffer
         List<Packet> pList = new List<Packet>();
 
         // all sniffed packets ;
-        List<Packet> allList = new List<Packet>();
+        public List<Packet> packets_List = new List<Packet>();
 
         // used to refresh the packets sniffed and listView and all the related info;
         delegate void refresh(Packet p);
@@ -66,10 +68,26 @@ namespace TarTarSniffer
                 Hypergate hypergate = new Hypergate(_connectedHosts[i]);
                 hypergateList.Add(hypergate);
             }
+
             foreach (Hypergate hypergate in hypergateList)
             {
                 hypergate.StartMonitor();
             }
+        }
+
+        private void RefreshPacketsList(Packet p)   
+        {
+            // TODO filter
+        }
+
+        public void AddPacket(Packet p)
+        {
+            Console.WriteLine("Added packet to list from: " + p.SRC_IP);
+            _totalSniffedPackets++;
+            packets_List.Add(p);
+            this.listView1.Items.Add(new ListViewItem(new string[] {p.SRC_IP, p.SRC_PORT,p.DEST_IP, p.DEST_PORT,
+                        p.PROTOCOL, p.TIME, p.LENGHT.ToString(), p.getCharString()}));
+            this.listView1.EnsureVisible(listView1.Items.Count > 5 ? listView1.Items.Count - 10 : listView1.Items.Count);
         }
     }
 }
