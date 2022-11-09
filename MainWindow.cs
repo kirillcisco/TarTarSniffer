@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Threading;
+using System.Windows.Forms.VisualStyles;
 
 namespace TarTarSniffer
 {
@@ -40,7 +41,12 @@ namespace TarTarSniffer
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            Console.WriteLine("Selected index changed: sender: " + sender.ToString());
+            System.Windows.Forms.ListView listView1 = sender as System.Windows.Forms.ListView;
+            if (listView1.SelectedItems != null && listView1.SelectedItems.Count != 0)
+            {
+                Packet p = pList[listView1.SelectedItems[0].Index];
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -67,6 +73,7 @@ namespace TarTarSniffer
             {
                 Hypergate hypergate = new Hypergate(_connectedHosts[i]);
                 hypergateList.Add(hypergate);
+                hypergate.newPacketParseEvent += new Hypergate.NewPacketParseEvent(RecieveNewPacket);
             }
 
             foreach (Hypergate hypergate in hypergateList)
@@ -75,9 +82,16 @@ namespace TarTarSniffer
             }
         }
 
+        private void RecieveNewPacket(Hypergate hypergate, Packet p)
+        {
+            AddPacket(p);
+            //this.Invoke(new refresh(RefreshPacketsList), p);
+        }
+
         private void RefreshPacketsList(Packet p)   
         {
             // TODO filter
+            AddPacket(p);
         }
 
         public void AddPacket(Packet p)

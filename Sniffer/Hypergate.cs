@@ -99,6 +99,7 @@ namespace TarTarSniffer.Sniffer
                     try
                     {
                         Packet packet = new Packet(receivedBuffer);
+                        PacketParsing(packet);
                     }
                     catch (ArgumentNullException ane)
                     {
@@ -115,6 +116,16 @@ namespace TarTarSniffer.Sniffer
             catch
             {
                 StopMonitor();
+            }
+        }
+
+        public delegate void NewPacketParseEvent(Hypergate hypergate, Packet p);
+        public event NewPacketParseEvent newPacketParseEvent;
+        private void PacketParsing(Packet p)
+        {
+            if (newPacketParseEvent != null)
+            {
+                newPacketParseEvent(this, p);
             }
         }
     }
