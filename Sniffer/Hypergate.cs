@@ -16,9 +16,6 @@ namespace TarTarSniffer.Sniffer
     {
 
         private const int BUFFER_SIZE = 1024 * 1024;
-        private const int IOC_VENDOR = 0x18000000;
-        private const int IOC_IN = -2147483648; //0x80000000;
-        private const int SIO_RCVALL = IOC_IN | IOC_VENDOR | 1;
 
         private Socket hypergate_Socket;
         private IPAddress _ipAddress;
@@ -56,10 +53,10 @@ namespace TarTarSniffer.Sniffer
                     switch (_ipAddress.AddressFamily)
                     {
                         case AddressFamily.InterNetwork:
-                            hypergate_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, System.Net.Sockets.ProtocolType.IP);
+                            hypergate_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
                             break;
                         case AddressFamily.InterNetworkV6:
-                            hypergate_Socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Raw, System.Net.Sockets.ProtocolType.IP);
+                            hypergate_Socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Raw, ProtocolType.IP);
                             break;
                         default:
                             break;
@@ -67,8 +64,10 @@ namespace TarTarSniffer.Sniffer
 
                     hypergate_Socket.Bind(new IPEndPoint(_ipAddress, 0));
 
-                    // https://learn.microsoft.com/ru-ru/dotnet/api/system.net.sockets.socket.iocontrol?view=net-6.0
-                    hypergate_Socket.IOControl(SIO_RCVALL, BitConverter.GetBytes((int)1), null);
+                    byte[] in_buffer = new byte[4] { 1, 0, 0, 0 };
+                    byte[] out_buffer = new byte[4];
+                    // https://learn.microsoft.com/ru-ru/dotnet/api/system.net.sockets.socket.iocontrol
+                    hypergate_Socket.IOControl(IOControlCode.ReceiveAll, in_buffer, out_buffer);
 
                     hypergate_Socket.BeginReceive(hypergate_buffer, 0, hypergate_buffer.Length, SocketFlags.None, new AsyncCallback(this.OnReceive), null);;
                 }
